@@ -220,4 +220,12 @@ pokemon %>%
   ggplot(aes(x = avg_power, y = avg_accuarcy, color = pokemon_type)) +
   geom_point()
 
+
+stats <- pokemon %>% 
+  group_by(pokemon_type) %>%
+  summarise(avg_power = mean(pokemon_power, na.rm = TRUE),
+            avg_accuarcy = mean(pokemon_accuracy, na.rm = TRUE))
+            
+model <- lm(data = stats, avg_accuracy ~ avg_power)
+plot(model)
 ```
