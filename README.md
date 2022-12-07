@@ -161,6 +161,8 @@ WITH (FORMAT CSV, HEADER);
 
 ### PART 3
 
+Here is my R analysis! Again, feel free to use this as you wish!
+
 ```r
 library(tidyverse)
 library(RColorBrewer)
