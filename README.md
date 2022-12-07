@@ -158,3 +158,66 @@ COPY temp3
 TO '/Users/Shared/Data_503/Datasets/scuffed_pokedex.csv'
 WITH (FORMAT CSV, HEADER);
 ```
+
+### PART 3
+
+```r
+library(tidyverse)
+library(RColorBrewer)
+
+pokemon <- read_csv("scuffed_pokedex.csv")
+
+names(pokemon)
+
+nb.cols <- 18
+mycolors <- colorRampPalette(brewer.pal(8, "YlOrRd"))(nb.cols)
+
+pokemon %>% 
+  mutate(pokemon_type = str_to_title(pokemon_type)) %>%
+  group_by(pokemon_type) %>%
+  summarise(avg_power = mean(pokemon_power, na.rm = TRUE),
+            avg_accuracy = mean(pokemon_accuracy, na.rm = TRUE)) %>%
+  ggplot(aes(x = avg_power, y = reorder(pokemon_type, avg_power), fill = reorder(pokemon_type, avg_power)))+
+  geom_col(show.legend = FALSE, color = "black") +
+  labs(x = "Average power",
+       y = "Pokemon type",
+       title = "FIRE! The Best Pokemon Type For Damage Output Is...?",
+       subtitle = "Based on an Average of All Moves Per Pokemon Type",
+       caption = "Source: Pokédex of Kanto, Johto, and Hoenn Regions @ Kaggle.com") +
+  scale_fill_manual(values = mycolors) +
+  theme(plot.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.x = element_line(color = "grey"))
+
+
+nb.cols <- 18
+mycolors <- colorRampPalette(brewer.pal(8, "Blues"))(nb.cols)
+
+pokemon %>% 
+  mutate(pokemon_type = str_to_title(pokemon_type)) %>%
+  group_by(pokemon_type) %>%
+  summarise(avg_power = mean(pokemon_power, na.rm = TRUE),
+            avg_accuracy = mean(pokemon_accuracy, na.rm = TRUE)) %>%
+  ggplot(aes(x = avg_accuracy, y = reorder(pokemon_type, avg_accuracy), fill = reorder(pokemon_type, avg_accuracy)))+
+  geom_col(show.legend = FALSE, color = "black") +
+  labs(x = "Average accuracy",
+       y = "Pokemon type",
+       title = "Ouch! Who wins the bullseye competition?",
+       subtitle = "Based on an Average of All Moves Per Pokemon Type",
+       caption = "Source: Pokédex of Kanto, Johto, and Hoenn Regions @ Kaggle.com") +
+  scale_fill_manual(values = mycolors) +
+  theme(plot.background = element_blank(),
+        panel.background = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.x = element_line(color = "grey"))
+
+
+pokemon %>% 
+  group_by(pokemon_type) %>%
+  summarise(avg_power = mean(pokemon_power, na.rm = TRUE),
+            avg_accuarcy = mean(pokemon_accuracy, na.rm = TRUE)) %>%
+  ggplot(aes(x = avg_power, y = avg_accuarcy, color = pokemon_type)) +
+  geom_point()
+
+```
